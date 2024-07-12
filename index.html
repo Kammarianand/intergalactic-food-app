@@ -9,10 +9,77 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.5/dist/gsap.min.js"></script>
     <style>
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: linear-gradient(135deg, #1e1e2f 0%, #2a2a3c 100%);
-        }
+       body {
+  background: linear-gradient(135deg,#1e1e2f 0%,#2a2a2a 100%);
+  font-family: 'Space Grotesk', sans-serif;
+ 
+  
+}
+
+
+
+.shooting-star {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 2px;
+  background: linear-gradient(-45deg, #5f91ff, rgba(0, 0, 255, 0));
+  border-radius: 999px;
+  filter: drop-shadow(0 0 6px #699bff);
+  animation: tail 3s ease-in-out infinite,
+             shooting 3s ease-in-out infinite;
+}
+
+.shooting-star::before, .shooting-star::after {
+  content: '';
+  position: absolute;
+  top: calc(50% - 1px);
+  right: 0;
+  height: 2px;
+  background: linear-gradient(-45deg, rgba(0, 0, 255, 0), #5f91ff, rgba(0, 0, 255, 0));
+  transform: translateX(50%) rotateZ(45deg);
+  border-radius: 100%;
+  animation: shining 3s ease-in-out infinite;
+}
+
+.shooting-star::after {
+  transform: translateX(50%) rotateZ(-45deg);
+}
+
+@keyframes tail {
+  0% {
+    width: 0;
+  }
+  30% {
+    width: 100px;
+  }
+  100% {
+    width: 0;
+  }
+}
+
+@keyframes shining {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 30px;
+  }
+  100% {
+    width: 0;
+  }
+}
+
+@keyframes shooting {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(300px);
+  }
+}
+
+
         .orbitron {
             font-family: 'Orbitron', sans-serif;
         }
@@ -222,7 +289,8 @@
       
 
 
-
+      <div class="content-wrapper">
+        <!-- Your existing content here -->
 
 
 
@@ -374,6 +442,11 @@
     </div>
 </footer>
     </div>
+
+
+
+
+
     <script>
         function app() {
             return {
@@ -542,6 +615,21 @@
       }, 500);
     }, 3000);
   });
+
+
+  function createShootingStar() {
+  const star = document.createElement('div');
+  star.className = 'shooting-star';
+  star.style.top = `${Math.random() * 100}%`;
+  star.style.left = `${Math.random() * 100}%`;
+  document.body.appendChild(star);
+  
+  setTimeout(() => {
+    star.remove();
+  }, 3000);
+}
+
+setInterval(createShootingStar, 5000);
     </script>
 </body>
 </html>
