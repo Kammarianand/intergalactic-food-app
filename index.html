@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>linuXian Intergalactic Food Service</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.5/dist/gsap.min.js"></script>
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #1e1e2f 0%, #2a2a3c 100%);
+        }
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .menu-item {
+            transition: all 0.3s ease;
+        }
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .blink {
+            animation: blink 2s linear infinite;
+        }
+        .custom-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+            width: 80%;
+            max-width: 400px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 0, 0, 0.8);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+        .floating-alien {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            font-size: 40px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .space-dust {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: white;
+            pointer-events: none;
+        }
+        /* Added footer styles */
+        .footer {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        [x-cloak] { display: none !important; }
+        .preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+  }
+
+  .preloader.fade-out {
+    opacity: 0;
+  }
+
+  .loader {
+    position: relative;
+    width: 200px;
+    height: 200px;
+  }
+
+  .orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: orbit 4s linear infinite;
+  }
+
+  .orbit:nth-child(1) {
+    width: 160px;
+    height: 160px;
+    margin-top: -80px;
+    margin-left: -80px;
+    animation-duration: 3s;
+  }
+
+  .orbit:nth-child(2) {
+    width: 120px;
+    height: 120px;
+    margin-top: -60px;
+    margin-left: -60px;
+    animation-duration: 2s;
+  }
+
+  .orbit:nth-child(3) {
+    width: 80px;
+    height: 80px;
+    margin-top: -40px;
+    margin-left: -40px;
+    animation-duration: 1s;
+  }
+
+  .planet {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+  }
+
+  .center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+  }
+
+  .loading-text {
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes orbit {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+    </style>
+</head>
+<body class="min-h-screen p-4 text-white">
+    <div id="preloader" class="preloader">
+        <div class="loader">
+          <div class="orbit">
+            <div class="planet">🍕</div>
+          </div>
+          <div class="orbit">
+            <div class="planet">🍔</div>
+          </div>
+          <div class="orbit">
+            <div class="planet">🥗</div>
+          </div>
+          <div class="center">🚀</div>
+        </div>
+        <div class="loading-text">Preparing Cosmic <br><center>Cuisine</center></div>
+      </div>
+      
+
+
+
+
+
+
+    <div x-data="app()" class="max-w-6xl mx-auto">
+        <header class="text-center mb-8 glass p-6 relative overflow-hidden">
+            <h1 class="text-4xl md:text-6xl font-bold mb-2 orbitron text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+                linuXian Intergalactic Food Service
+            </h1>
+            <p class="text-xl opacity-80">Delivering across the Solar System!</p>
+            <p class="text-lg text-yellow-300 mt-4 blink">Only limited items available due to high rocket fuel costs!<br><small>use menu for better experience</small></p>
+        </header>
+
+        <main class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <section class="md:col-span-3 glass p-6">
+                <div class="mb-6 flex items-center justify-between">
+                    <label for="category" class="orbitron text-lg">Choose your cosmic cuisine:</label>
+                    <select id="category" x-model="selectedCategory" class="p-2 rounded-lg bg-white bg-opacity-20 text-white">
+                        <option value="all">MENU</option>
+                        <option value="pizzas">Pizza Nebula</option>
+                        <option value="biryani">Biryani Black Hole</option>
+                        <option value="meals">Milky Way Meals</option>
+                        <option value="snacks">Asteroid Belt Snacks</option>
+                          <option value="sdrinks">Space Special Maina</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    <template x-for="item in filteredMenu" :key="item.id">
+                        <div class="menu-item glass p-4 rounded-lg">
+                            <img :src="item.image" :alt="item.name" class="w-full h-48 object-cover rounded-lg mb-4">
+                            <h3 x-text="item.name" class="text-xl font-semibold mb-2 orbitron"></h3>
+                            <p class="text-gray-300 mb-4" x-text="$${item.price.toFixed(2)}"></p>
+                            <button @click="addToCart(item)" class="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold py-2 px-4 rounded-full hover:opacity-90 transition-opacity duration-300">
+                                Beam to Cart
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </section>
+        </main>
+
+        <div class="fixed bottom-4 right-4 flex flex-col space-y-2">
+            <button @click="toggleCart" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span x-text="cartItemCount"></span>
+            </button>
+            <button @click="showSpaceToast" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+            </button>
+        </div>
+
+        <div x-show="showCart" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4" style="display: none;">
+            <div class="glass p-8 rounded-lg max-w-md w-full">
+                <h2 class="text-2xl font-semibold mb-4 orbitron">Your Cosmic Cart</h2>
+                <template x-if="cart.length === 0">
+                    <p class="opacity-80">Your space cart is as empty as the void!</p>
+                </template>
+                <template x-if="cart.length > 0">
+                    <div>
+                        <ul class="space-y-4 mb-4">
+                            <template x-for="item in cart" :key="item.id">
+                                <li class="flex justify-between items-center bg-white bg-opacity-10 rounded-lg p-3">
+                                    <span x-text="item.name"></span>
+                                    <div>
+                                        <span x-text="$${item.price.toFixed(2)}" class="mr-2"></span>
+                                        <span x-text="x${item.quantity}" class="mr-2"></span>
+                                        <button @click="removeFromCart(item)" class="text-red-400 hover:text-red-600">
+                                            Eject
+                                        </button>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                        <div class="mb-4">
+                            <label for="destination" class="block mb-2">Delivery Destination</label>
+                            <select id="destination" x-model="destination" class="w-full px-3 py-2 rounded-lg bg-white bg-opacity-20 text-white focus:outline-none focus:ring-2 focus:ring-purple-600">
+                                <option value="earth"> Select Destination </option>
+                                <option value="moon">Moon (+$500)</option>
+                                <option value="mars">Mars (+$1000)</option>
+                                <option value="saturn">Saturn (+$2000)</option>
+                                <option value="pluto">Pluto (+$3000)</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="coupon" class="block mb-2">Cosmic Coupon Code</label>
+                            <input type="text" id="coupon" x-model="couponCode" placeholder="soloEater" class="w-full px-3 py-2 rounded-lg bg-white bg-opacity-20 text-white focus:outline-none focus:ring-2 focus:ring-purple-600">
+                            <button @click="applyCoupon" class="mt-2 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-full text-sm">
+                                Apply Coupon
+                            </button>
+                        </div>
+                        <div class="text-right mb-4">
+                            <p class="text-xl font-semibold">Subtotal: $<span x-text="cartSubtotal.toFixed(2)"></span></p>
+                            <p class="text-lg">Delivery Cost: $<span x-text="deliveryCost.toFixed(2)"></span></p>
+                            <template x-if="discount > 0">
+                                <p class="text-lg text-green-400">Discount: -$<span x-text="discount.toFixed(2)"></span></p>
+                            </template>
+                            <p class="text-2xl font-bold">Total: $<span x-text="cartTotal.toFixed(2)"></span></p>
+                        </div>
+                        <button @click="placeOrder" class="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold py-2 px-4 rounded-full hover:opacity-90 transition-opacity duration-300">
+                            Launch Order
+                        </button>
+                    </div>
+                </template>
+                <button @click="showCart = false" class="mt-4 text-white hover:underline">Continue Shopping</button>
+            </div>
+        </div>
+
+        <div x-show="showAlert" class="custom-alert" x-cloak>
+            <p class="text-xl mb-4">Oops! Our quantum computer is experiencing some gravitational anomalies.</p>
+            <p class="text-lg mb-4">Please try again when we're back in normal space-time!</p>
+            <button @click="showAlert = false" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                Close
+            </button>
+        </div>
+
+        <div x-show="showToast" class="toast" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform translate-y-2">
+            <span x-text="toastMessage"></span>
+        </div>
+
+        <div class="floating-alien" x-show="showAlien">👽</div>
+
+        <!-- Added footer -->
+       <footer class="mt-16 glass p-8 rounded-lg">
+    <div class="max-w-6xl mx-auto flex flex-wrap justify-between items-center">
+        <div class="w-full md:w-1/3 mb-6 md:mb-0">
+            <h3 class="text-4xl md:text-6xl font-bold mb-2 orbitron text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">linuXian Intergalactic Food Service</h3>
+            <p class="text-1xl md:text-6xl font-bold mb-2 orbitron text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-600">Serving the cosmos since 2154</p>
+        </div>
+        <div class="w-full md:w-1/3 mb-6 md:mb-0">
+            <h4 class="text-xl font-semibold mb-4">Cosmic Contact</h4>
+            <p>🚀 Milky Way Galaxy, Solar System</p>
+            <p>📡 space-phone: 1-800-STARDINE</p>
+            <p>💫 astro-mail: nom@linuxian.space</p>
+        </div>
+        <div class="w-full md:w-1/3">
+            <h4 class="text-xl font-semibold mb-4">Space Links</h4>
+            <ul class="space-y-2">
+                <li><a href="#" class="text-blue-400 hover:text-blue-300">Terms of Interstellar Service</a></li>
+                <li><a href="#" class="text-blue-400 hover:text-blue-300">Quantum Privacy Policy</a></li>
+                <li><a href="#" class="text-blue-400 hover:text-blue-300">Careers (Earthlings Welcome)</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="text-center mt-8 pt-8 border-t border-gray-600">
+        <p>&copy; 2154 linuXian Intergalactic Food Service. All rights reserved across the multiverse.</p>
+    </div>
+</footer>
+    </div>
+    <script>
+        function app() {
+            return {
+                menu: [
+                    { id: 1, name: 'Nebula Margherita', price: 120.99, image: 'https://i.ibb.co/W5f159k/downloadfile-11.jpg', category: 'pizzas' },
+                    { id: 2, name: 'Black Hole Grilled Veggie Skewers', price: 146.99, image: 'https://i.ibb.co/gT8HxLw/downloadfile-16.jpg', category: 'pizzas' },
+                    { id: 3, name: 'Cosmic Veggie Supreme', price: 153.99, image: 'https://i.ibb.co/PD45N3k/Designer-3.png', category: 'pizzas' },
+                    { id: 4, name: 'Martian Panner Biryani', price: 166.99, image: 'https://i.ibb.co/HXqmwgQ/downloadfile-25.jpg', category: 'biryani' },
+                    { id: 5, name: 'Lunar Veg Manchurian Biryani', price: 185.99, image: 'https://i.ibb.co/G2bpKxg/Designer-5.png', category: 'biryani' },
+                    { id: 6, name: 'Asteroid Broccoli Biryani', price: 149.99, image: 'https://i.ibb.co/QKCy6WH/Designer-6.png', category: 'biryani' },
+                    { id: 7, name: 'Galactic Gujrati Thali', price: 187.99, image: 'https://i.ibb.co/r5xbxsW/downloadfile-23.jpg', category: 'meals' },
+                    { id: 8, name: 'Comet Hyderabadi Thali', price: 225.99, image: 'https://i.ibb.co/sVHt1yf/Designer-7.png', category: 'meals' },
+                    { id: 9, name: 'Interstellar Punjabi Thali', price: 107.99, image: 'https://i.ibb.co/fqGz9HN/Designer-8.png', category: 'meals' },
+                    { id: 10, name: 'Meteor Mozzarella Burger', price: 89.99, image: 'https://i.ibb.co/0Q2J2Qf/downloadfile-15.jpg', category: 'snacks' },
+                    { id: 11, name: 'Kepler Panner Tikka', price: 100.99, image: 'https://i.ibb.co/60jnYT0/Designer-9.png', category: 'snacks' },
+                    { id: 12, name: 'Supernova Noodles', price: 119.99, image: 'https://i.ibb.co/YR0zV0h/Designer-10.png', category: 'snacks' },
+                      { id: 13, name: 'Quantum Pav Bhaji', price: 119.99, image: 'https://i.ibb.co/x7STP4R/downloadfile-26.jpg', category: 'sdrinks' },
+                        { id: 14, name: 'Eclipse Chole Bhature', price: 925.99, image: 'https://i.ibb.co/3YZfwSb/Designer-11.png', category: 'sdrinks' },
+                          { id: 15, name: 'Red Dwarf Apple Juice ', price: 579.99, image: 'https://i.ibb.co/jkstT9V/downloadfile-32.jpg', category: 'sdrinks' },
+                          { id: 16, name: 'Voyager Kimchi', price: 879.99, image: 'https://i.ibb.co/kx31yVd/downloadfile-19.jpg', category: 'sdrinks' },
+                          { id: 17, name: 'Starlight Choco Cake', price: 379.99, image: 'https://i.ibb.co/QCjV0jy/downloadfile-34.jpg', category: 'sdrinks' },
+                          { id: 18, name: 'Andromeda Alfredo Pasta', price: 179.99, image: 'https://i.ibb.co/nm6pvvW/Designer-12.png', category: 'sdrinks' },
+
+                ],
+                cart: [],
+                showAlert: false,
+                showCart: false,
+                selectedCategory: 'all',
+                destination: 'earth',
+                showToast: false,
+                showAlien: false,
+                toastMessage: '',
+                couponCode: '',
+                discount: 0,
+                get filteredMenu() {
+                    return this.selectedCategory === 'all' 
+                        ? this.menu 
+                        : this.menu.filter(item => item.category === this.selectedCategory);
+                },
+                get cartItemCount() {
+                    return this.cart.reduce((total, item) => total + item.quantity, 0);
+                },
+                addToCart(item) {
+                    // Check if adding this item would exceed the 3 item limit
+                    if (this.cartItemCount + 1 > 2) {
+                        this.showToast = true;
+                        this.toastMessage = "Max 2 items allowed due to fuel cost!";
+                        setTimeout(() => {
+                            this.showToast = false;
+                        }, 3000);
+                        return;
+                    }
+
+                    const existingItem = this.cart.find(cartItem => cartItem.id === item.id);
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                    } else {
+                        this.cart.push({ ...item, quantity: 1 });
+                    }
+                    this.animateAddToCart();
+                },
+                removeFromCart(item) {
+                    const index = this.cart.findIndex(cartItem => cartItem.id === item.id);
+                    if (index !== -1) {
+                        if (this.cart[index].quantity > 1) {
+                            this.cart[index].quantity -= 1;
+                        } else {
+                            this.cart.splice(index, 1);
+                        }
+                    }
+                },
+                get cartSubtotal() {
+                    return this.cart.reduce((total, item) => total + item.price * item.quantity, 0);
+                },
+                get deliveryCost() {
+                    const costs = {
+                        earth: 0,
+                        moon: 500,
+                        mars: 1000,
+                        saturn: 2000,
+                        pluto: 3000
+                    };
+                    return costs[this.destination] || 0;
+                },
+                get cartTotal() {
+                    return this.cartSubtotal + this.deliveryCost - this.discount;
+                },
+                toggleCart() {
+                    this.showCart = !this.showCart;
+                },
+                placeOrder() {
+                    this.showAlert = true;
+                    setTimeout(() => {
+                        this.showAlert = false;
+                        this.showCart = false;
+                        this.cart = [];
+                        this.destination = 'earth';
+                        this.discount = 0;
+                        this.couponCode = '';
+                    }, 3000);
+                },
+                showSpaceToast() {
+                    const messages = [
+                        "Unable to connect to space chat. The aliens are on lunch break!",
+                        "Oops! Our space-time communicator is jammed with cosmic dust.",
+                        "Sorry, the intergalactic network is down for maintenance.",
+                        "Message failed. The space pigeons are on strike!"
+                    ];
+                    this.toastMessage = messages[Math.floor(Math.random() * messages.length)];
+                    this.showToast = true;
+                    setTimeout(() => {
+                        this.showToast = false;
+                    }, 3000);
+                },
+                animateAddToCart() {
+                    gsap.from(".fixed.bottom-4.right-4", {
+                        duration: 0.5,
+                        scale: 1.5,
+                        ease: "elastic.out(1, 0.3)",
+                        onComplete: () => {
+                            gsap.to(".fixed.bottom-4.right-4", {duration: 0.5, scale: 1});
+                        }
+                    });
+                    if (Math.random() > 0.7) {
+                        this.showAlien = true;
+                        setTimeout(() => {
+                            this.showAlien = false;
+                        }, 5000);
+                    }
+                    this.createSpaceDust();
+                },
+                applyCoupon() {
+                    if (this.couponCode.toLowerCase() === 'soloeater') {
+                        this.discount = this.cartSubtotal * 0.1; // 10% discount
+                        this.showSpaceToast();
+                        this.toastMessage = "Coupon applied! You've earned a 10% solo traveler discount!";
+                    } else {
+                        this.discount = 0;
+                        this.showSpaceToast();
+                        this.toastMessage = "Invalid coupon code. Nice try, earthling!";
+                    }
+                },
+                createSpaceDust() {
+                    for (let i = 0; i < 20; i++) {
+                        const dust = document.createElement('div');
+                        dust.className = 'space-dust';
+                        dust.style.left = `${Math.random() * 100}vw`;
+                        dust.style.top = `${Math.random() * 100}vh`;
+                        document.body.appendChild(dust);
+                        gsap.to(dust, {
+                            duration: 2 + Math.random() * 3,
+                            y: '100vh',
+                            opacity: 0,
+                            onComplete: () => dust.remove()
+                        });
+                    }
+                }
+            }
+        }
+        document.addEventListener('DOMContentLoaded', (event) => {
+    setTimeout(() => {
+      const preloader = document.getElementById('preloader');
+      preloader.classList.add('fade-out');
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 500);
+    }, 3000);
+  });
+    </script>
+</body>
+</html>
