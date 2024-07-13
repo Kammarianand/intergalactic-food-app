@@ -89,7 +89,7 @@
             padding: 20px 0;
             margin-top: 40px;
         }
-        [x-cloak] { display: none !important; }
+        [x-cloak] {display: none !important}
         .preloader {
     position: fixed;
     top: 0;
@@ -204,7 +204,7 @@
     </style>
 </head>
 <body class="min-h-screen p-4 text-white">
-    <div id="preloader" class="preloader">
+<div id="preloader" class="preloader">
         <div class="loader">
           <div class="orbit">
             <div class="planet">🍕</div>
@@ -220,19 +220,13 @@
         <div class="loading-text">Preparing Cosmic <br><center>Cuisine</center></div>
       </div>
       
-
-
-
-
-
-
     <div x-data="app()" class="max-w-6xl mx-auto">
         <header class="text-center mb-8 glass p-6 relative overflow-hidden">
             <h1 class="text-4xl md:text-6xl font-bold mb-2 orbitron text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
                 linuXian Intergalactic Food Service
             </h1>
             <p class="text-xl opacity-80">Delivering across the Solar System!</p>
-            <p class="text-lg text-yellow-300 mt-4 blink">Only limited items available due to high rocket fuel costs!<br><small>use menu for better experience</small></p>
+            <p class="text-lg text-yellow-300 mt-4 blink">Only limited items available due to high rocket fuel costs!</p>
         </header>
 
         <main class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -253,7 +247,7 @@
                         <div class="menu-item glass p-4 rounded-lg">
                             <img :src="item.image" :alt="item.name" class="w-full h-48 object-cover rounded-lg mb-4">
                             <h3 x-text="item.name" class="text-xl font-semibold mb-2 orbitron"></h3>
-                            <p class="text-gray-300 mb-4" x-text="$${item.price.toFixed(2)}"></p>
+                            <p class="text-gray-300 mb-4" x-text="`$${item.price.toFixed(2)}`"></p>
                             <button @click="addToCart(item)" class="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold py-2 px-4 rounded-full hover:opacity-90 transition-opacity duration-300">
                                 Beam to Cart
                             </button>
@@ -290,8 +284,8 @@
                                 <li class="flex justify-between items-center bg-white bg-opacity-10 rounded-lg p-3">
                                     <span x-text="item.name"></span>
                                     <div>
-                                        <span x-text="$${item.price.toFixed(2)}" class="mr-2"></span>
-                                        <span x-text="x${item.quantity}" class="mr-2"></span>
+                                        <span x-text="`$${item.price.toFixed(2)}`" class="mr-2"></span>
+                                        <span x-text="`x${item.quantity}`" class="mr-2"></span>
                                         <button @click="removeFromCart(item)" class="text-red-400 hover:text-red-600">
                                             Eject
                                         </button>
@@ -374,7 +368,7 @@
     </div>
 </footer>
     </div>
-    <script>
+<script>
         function app() {
             return {
                 menu: [
@@ -393,16 +387,16 @@
                       { id: 13, name: 'Quantum Pav Bhaji', price: 119.99, image: 'https://i.ibb.co/x7STP4R/downloadfile-26.jpg', category: 'sdrinks' },
                         { id: 14, name: 'Eclipse Chole Bhature', price: 925.99, image: 'https://i.ibb.co/3YZfwSb/Designer-11.png', category: 'sdrinks' },
                           { id: 15, name: 'Red Dwarf Apple Juice ', price: 579.99, image: 'https://i.ibb.co/jkstT9V/downloadfile-32.jpg', category: 'sdrinks' },
-                          { id: 16, name: 'Voyager Kimchi', price: 879.99, image: 'https://i.ibb.co/kx31yVd/downloadfile-19.jpg', category: 'sdrinks' },
+ { id: 16, name: 'Voyager Kimchi', price: 999.99, image: 'https://i.ibb.co/kx31yVd/downloadfile-19.jpg', category: 'sdrinks' },
                           { id: 17, name: 'Starlight Choco Cake', price: 379.99, image: 'https://i.ibb.co/QCjV0jy/downloadfile-34.jpg', category: 'sdrinks' },
-                          { id: 18, name: 'Andromeda Alfredo Pasta', price: 179.99, image: 'https://i.ibb.co/nm6pvvW/Designer-12.png', category: 'sdrinks' },
-
+                          { id: 18, name: 'Andromeda Alfredo Pasta', price: 179.99, image: 'https://i.ibb.co/nm6pvvW/Designer-12.png', category: 'sdrinks' },                         
+                    
                 ],
                 cart: [],
-                showAlert: false,
                 showCart: false,
                 selectedCategory: 'all',
                 destination: 'earth',
+                showAlert: false,
                 showToast: false,
                 showAlien: false,
                 toastMessage: '',
